@@ -103,8 +103,8 @@
 
     this.cloneSlides = function(){
       // Prepend first last items at begin of slider and first elements on end of slider
-      $slider.prepend($sliderItems.slice(0, self.settings.cloneItems).clone().addClass(self.settings.clonedClass));
-      $slider.append($sliderItems.slice(slideCount - self.settings.cloneItems + 1, slideCount + 1).clone().addClass(self.settings.clonedClass));
+      $slider.append($sliderItems.slice(0, self.settings.cloneItems).clone().addClass(self.settings.clonedClass));
+      $slider.prepend($sliderItems.slice(slideCount - self.settings.cloneItems + 1, slideCount + 1).clone().addClass(self.settings.clonedClass));
       // Cache cloned items in variable
       $clonedSliderItems = $sliderContainer.find(self.settings.itemSelector).filter('.' + self.settings.clonedClass);
     };
