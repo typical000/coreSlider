@@ -82,7 +82,7 @@
         self.resize();
       }
       // Pause on hover events
-      if(self.settings.pauseOnHover) {
+      if(self.settings.pauseOnHover && self.settings.slideshow) {
         $sliderContainer.mouseenter(function(){
           self.stop();
         });
@@ -91,7 +91,7 @@
         });
       }
       // Start on hover events
-      if(self.settings.startOnHover) {
+      if(self.settings.startOnHover && self.settings.slideshow) {
         $sliderContainer.mouseenter(function(){
           self.play();
         });
