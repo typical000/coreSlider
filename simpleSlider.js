@@ -184,7 +184,7 @@
       self.stop();
 
       // Play animation only if total number of items is less than number visible in viewport
-      if (slideCountTotal > self.settings.items || isDirectionNavClick) {
+      if (slideCountTotal > self.settings.items && isDirectionNavClick) {
         // Get number of remaining on right items
         remainingItems.right = (slideCount + 1) - currentSlide - self.settings.items;
         remainingItems.left = currentSlide;
@@ -228,25 +228,24 @@
             $this.attr('src', currentUrl);
           });
         }
-
-        // Set active new control nav item
-        if (self.settings.controlNavEnabled && typeof $sliderControlNavItems !== 'undefined') {
-          $sliderControlNavItems.removeClass(self.settings.activeClass);
-          $sliderControlNavItems.eq(index).addClass(self.settings.activeClass);
-        }
-
-        // Apply CSS transition to block
-        $slider.css(transformPrefix, getTranslateX(-(index + self.settings.cloneItems) * slideWidth));
-
-        currentSlide = index;
-        isFirstLoad = false; // Change loaded indicator
       }
 
       if(!isDirectionNavClick && self.settings.controlNavEnabled) {
-        // Set slide directly (for example from dots or from extenal API)
-        console.log('Extenral = ' + index);
+        // Set slide directly (for example from dots or from extenal API), including items cloning
+        index = (index > slideCount - self.settings.items + self.settings.cloneItems + 1) ? slideCount - self.settings.items + self.settings.cloneItems + 1 : index;
       }
 
+      // Set active new control nav item
+      if (self.settings.controlNavEnabled && typeof $sliderControlNavItems !== 'undefined') {
+        $sliderControlNavItems.removeClass(self.settings.activeClass);
+        $sliderControlNavItems.eq(index).addClass(self.settings.activeClass);
+      }
+
+      // Apply CSS transition to block
+      $slider.css(transformPrefix, getTranslateX(-(index + self.settings.cloneItems) * slideWidth));
+
+      currentSlide = index;
+      isFirstLoad = false; // Change loaded indicator
     };
 
     // Resize handler function
