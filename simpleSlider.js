@@ -89,7 +89,7 @@
         self.cloneSlides();
       }
       self.setSizes();
-      self.setSlide(currentSlide);
+      self.setSlide(currentSlide, false);
       if (self.settings.slideshow) {
         self.play();
       }
@@ -257,7 +257,7 @@
         }
         resizeTimeout = setTimeout(function() {
           self.setSizes();
-          self.setSlide(currentSlide);
+          self.setSlide(currentSlide, false);
         }, 250);
       })
     };
@@ -269,7 +269,7 @@
 
     this.play = function() {
       animateInterval = setInterval(function() {
-        self.setSlide(currentSlide + self.settings.itemsPerSlide);
+        self.setSlide(currentSlide + self.settings.itemsPerSlide, true);
         self.play();
       }, self.settings.interval);
     };
