@@ -1,2 +1,2 @@
-# simpleSlider
-jQuery simple slider plugin
+# coreSlider
+jQuery BEM-style slider plugin
