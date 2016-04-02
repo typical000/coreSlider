@@ -1,0 +1,88 @@
+/*
+ * CoreSlider v1.0.0
+ * Copyright 2016 Pavel Davydov
+ * 
+ * Licensed under MIT (http://opensource.org/licenses/MIT)
+ */
+
+.core-slider {
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #fff;
+}
+
+.core-slider_viewport {
+  overflow: hidden;
+  position: relative;
+}
+
+.core-slider_list {
+  -webkit-transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.core-slider_item {
+  float: left;
+}
+
+.core-slider_item img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.core-slider_nav.is-disabled {
+  display: none;
+}
+
+.core-slider_control-nav {
+  position: absolute;
+  z-index: 999;
+  right: 0;
+  bottom: 30px;
+  left: 0;
+  text-align: center;
+}
+
+.core-slider_control-nav-item {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 0 10px;
+  cursor: pointer;
+  -webkit-transition: all .5s linear;
+  transition: all .5s linear;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.core-slider_control-nav-item:hover {
+  opacity: .3;
+}
+
+.core-slider_control-nav-item.is-active {
+  cursor: default;
+  opacity: .3;
+}
+
+.core-slider_arrow {
+  position: absolute;
+  z-index: 999;
+  top: 50%;
+  cursor: pointer;
+  -webkit-transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+}
+
+.core-slider_arrow.is-disabled {
+  cursor: default;
+  opacity: .5;
+}
+
+.core-slider_arrow:hover {
+  opacity: .5;
+}
