@@ -1,3 +1,10 @@
+/*
+ * CoreSlider v1.0.0
+ * Copyright 2016 Pavel Davydov
+ * 
+ * Licensed under MIT (http://opensource.org/licenses/MIT)
+ */
+
 (function($) {
 
   'use strict';
