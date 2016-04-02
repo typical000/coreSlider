@@ -1,0 +1,493 @@
+@charset "utf-8";
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700&subset=latin);
+@import url(http://fonts.googleapis.com/css?family=Comfortaa:400,300&subset=latin);
+
+$base_transition-time: 0.2s;
+$base_transition-type: cubic-bezier(0.77, 0, 0.175, 1);
+
+$base_font-size: 1.4rem;
+$base_line-height: 2.4rem;
+
+$base_font__text: 'Open Sans', Helvetica, Arial, serif;
+$base_font__title: 'Comfortaa', Helvetica, Arial, serif;
+
+$base_text_color: #555;
+$base_title_color: #000;
+
+$base_page_background: #fff;
+
+$section_background: #fff;
+$section_background__alt: #f3f3f3;
+
+$base_link_color: #000;
+$base_link_color__hover: darken($base_link_color, 10%);
+
+$header_background: #1f1f1f;
+$header_color: #fff;
+
+$logo_background: #000;
+
+$footer_background: $header_background;
+$footer_color: $header_color;
+
+// Simple reset
+html {
+  margin: 0;
+  padding: 0;
+  font-size: 62.5%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 980px;
+  font-family: $base_font__text;
+  font-size: $base_font-size;
+  font-weight: 300;
+  line-height: $base_line-height;
+  color: $base_text_color;
+  background: $base_page_background;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: $base_title_color;
+  font-family: $base_font__title;
+  font-weight: 300;
+  line-height: normal;
+  margin: 0;
+}
+
+h1 {
+  font-size: 3.2rem;
+}
+
+h2 {
+  font-size: 3.2rem;
+}
+
+h3 {
+  font-size: 2.4rem;
+}
+
+p {
+  margin: 0 0 1.5rem 0;
+}
+
+ul, ol {
+  margin: 1.5rem 0;
+  padding-left: 2rem;
+  list-style-type: circle;
+}
+
+li {
+  margin: 0.5rem 0;
+}
+
+a {
+  transition: all $base_transition-time $base_transition-type;
+  color: $base_link_color;
+  text-decoration: underline;
+  &:active,
+  &:hover {
+    text-decoration: none;
+    color: $base_link_color__hover;
+  }
+}
+
+code, pre {
+  font-size: 13px;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  line-height: 18px;
+  margin-bottom: 20px;
+  font-family: "Consolas", "Monaco", "Courier", monospace;
+  color: #666;
+  background: #f8f8f8;
+  border-radius: 3px;
+  .section__grey & {
+    background: #fff;
+  }
+}
+
+pre {
+  overflow-y: auto;
+}
+
+code {
+  padding: 2px 5px;
+}
+
+// Container
+.container {
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 10px;
+  position: relative;
+  &__centered {
+    text-align: center;
+  }
+}
+
+// Section
+.section {
+  position: relative;
+  padding-bottom: 3rem;
+  &_title {
+    padding-left: 30px;
+    border-left: 2px solid lighten($base_title_color, 70%);
+    margin-bottom: 3rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    line-height: 4rem;
+  }
+  &_subtitle {
+    padding-left: 30px;
+    margin-bottom: 30px;
+    &-number {
+      color: lighten($base_title_color, 70%);
+      padding-right: 15px;
+    }
+  }
+  &_description {
+    margin-bottom: 30px;
+    overflow: hidden;
+  }
+  &_column {
+    float: left;
+    box-sizing: border-box;
+    width: 50%;
+    &__left {
+      padding-right: 2%;
+    }
+    &__right {
+      padding-left: 2%;
+    }
+  }
+  // Colors
+  &__white {
+    background: $section_background;
+  }
+  &__grey {
+    background: $section_background__alt;
+  }
+  // Types
+  &__header {
+    padding-bottom: 0;
+  }
+  &__how-to-use {
+
+  }
+  &__options {
+
+  }
+  &__examples {
+
+  }
+  &__browser-support {
+
+  }
+  &__download {
+    padding: 50px 0;
+  }
+}
+
+// Button
+.btn {
+  transition: all $base_transition-time $base_transition-type;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  font-size: 1.8rem;
+  border-radius: 0;
+  appearance: none;
+  cursor: pointer;
+  text-shadow: none;
+  box-shadow: none;
+  display: inline-block;
+  font-family: $base_font__title;
+  font-weight: 300;
+  line-height: normal;
+  &:hover {
+    color: #fff;
+    background: #333;
+  }
+}
+
+// Icons
+.icon {
+  display: inline-block;
+  &__github {
+    width: 56px;
+    height: 15px;
+    background: url(../images/icon_github.png) no-repeat 0 0;
+  }
+  &__fork {
+    width: 11px;
+    height: 15px;
+    background: url(../images/icon_fork.png) no-repeat 0 0;
+  }
+}
+
+// Utils
+.separator {
+  display: inline-block;
+  padding: 0 10px;
+  vertical-align: middle;
+}
+
+// Header
+.nav {
+  background: $header_background;
+  color: $header_color;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5rem;
+  font-size: 1.6rem;
+  z-index: 1000;
+}
+
+.logo {
+  height: 60px;
+  background: darken($header_background, 100%);
+  float: left;
+  padding: 0 15px;
+  &::before {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  }
+  &_img {
+    vertical-align: middle;
+    display: inline-block;
+  }
+}
+
+.menu {
+  float: right;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  &_item {
+    margin: 0;
+    padding: 0;
+    float: left;
+  }
+  &_link {
+    transition-duration: 0.5s;
+    text-decoration: none;
+    color: $header_color;
+    line-height: 5rem;
+    padding: 0 15px;
+    display: block;
+    background: $header_background;
+    &:hover {
+      padding-top: 1rem;
+      background: darken($header_background, 100%);
+      color: $header_color;
+    }
+  }
+}
+
+// Footer
+.footer {
+  background: $footer_background;
+  color: $footer_color;
+  text-align: center;
+  font-size: 1.4rem;
+  text-align: center;
+  padding: 20px 10px;
+  &_link {
+    color: $footer_color;
+    padding: 0 5px;
+    &:hover {
+      color: $footer_color;
+    }
+  }
+}
+
+// Page title
+.page-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 300;
+  &_wrap {
+    float: left;
+    background: $header_background;
+    color: $header_color;
+    padding: 20px 30px;
+    margin-left: -9999px;
+    padding-left: 9999px;
+  }
+  &_description {
+    color: $header_color;
+    font-size: 2.4rem;
+  }
+}
+
+// Demo
+.demo {
+  height: 40rem;
+  background-position: center center;
+  background-size: cover;
+  &__bg {
+    &-1 {
+      background-image: url(../assets/mountain_1.jpg);
+    }
+    &-2 {
+      background-image: url(../assets/mountain_2.jpg);
+    }
+    &-3 {
+      background-image: url(../assets/mountain_3.jpg);
+    }
+  }
+}
+
+.example {
+  &_1 {
+    float: right;
+    width: 450px;
+  }
+  &_2 {
+
+  }
+  &_3 {
+    margin-bottom: 30px;
+  }
+}
+
+// Core slider
+.core-slider {
+  position: relative;
+  &_viewport {
+    position: relative;
+    overflow: hidden;
+  }
+  &_list {
+    transition: all 0.5s $base_transition-type;
+  }
+  &_item {
+    float: left;
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  &_nav {
+    &.is-disabled {
+      display: none;
+    }
+  }
+  &_control-nav {
+    position: absolute;
+    z-index: 999;
+    left: 0;
+    right: 0;
+    bottom: 30px;
+    text-align: center;
+    // Items
+    &-item {
+      transition: all 0.5s linear;
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin: 0 10px;
+      cursor: pointer;
+      background: #fff;
+      &:hover {
+        opacity: 0.3;
+      }
+      &.is-active {
+        opacity: 0.3;
+        cursor: default;
+      }
+    }
+  }
+  // Arrow
+  &_arrow {
+    position: absolute;
+    top: 50%;
+    margin-top: -25px;
+    width: 26px;
+    height: 49px;
+    z-index: 999;
+    cursor: pointer;
+    &.is-disabled {
+      cursor: default;
+      opacity: 0.5;
+    }
+    &:hover {
+      opacity: 0.5;
+    }
+    &__right {
+      right: 20px;
+      background: url(../images/arrow_right.png) no-repeat 0 0;
+    }
+    &__left {
+      left: 20px;
+      background: url(../images/arrow_left.png) no-repeat 0 0;
+    }
+  }
+  // Mod's
+  &__fullwidth {
+    .core-slider {
+      &_viewport {
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background: url(../images/dot.png) repeat 0 0;
+        }
+      }
+    }
+  }
+  &__carousel {
+    overflow: hidden;
+    &::before,
+    &::after {
+      content: "";
+      width: 150px;
+      position: absolute;
+      top: -5px;
+      bottom: -5px;
+      z-index: 200;
+    }
+    &::before {
+      left: -5px;
+      background: linear-gradient(to right, #fff 10%, transparent);
+    }
+    &::after {
+      right: -5px;
+      background: linear-gradient(to left, #fff 10%, transparent);
+    }
+    .core-slider {
+      &_viewport {
+        overflow: visible;
+        width: 250px;
+        margin: 0 auto;
+      }
+      &_arrow {
+        &__left {
+          left: 70px;
+        }
+        &__right {
+          right: 70px;
+        }
+      }
+    }
+  }
+}
+

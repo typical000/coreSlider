@@ -1,0 +1,342 @@
+doctype html
+html
+  head
+    title coreSlider | jQuery BEM-style slider plugin
+    
+    meta(name="description", content="jQuery BEM-style slider plugin")
+
+    meta(http-equiv="Content-Type", content="text/html; charset=UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+
+    link(href="css/application.css", rel="stylesheet")
+
+    script(src="http://code.jquery.com/jquery-latest.min.js")
+    script(src="coreSlider.js")
+    script.
+      (function ($) {
+        $(document).ready(function () {
+          var $body = $('html, body');
+          $mainMenu = $('.menu');
+
+          $mainMenu.on('click', 'a', function(e) {
+            e.preventDefault();
+            var targetID = $(this).attr('href'),
+                offset = 50;
+
+            $body.animate({
+              scrollTop:$(targetID).offset().top - offset
+            }, 1000);
+          });
+        });
+
+        $(window).load(function () {
+
+          $('#headerSlider').coreSlider({
+            interval: 4000,
+            navEnabled: false
+          });
+
+          $('#example1').coreSlider({
+            pauseOnHover: false,
+            interval: 3000,
+            controlNavEnabled: true
+          });
+
+          $('#example2').coreSlider({
+            interval: 3000,
+            items: 2
+          });
+
+          $('#example3').coreSlider({
+            interval: 3000,
+            clone: true,
+            cloneItems: 3,
+            controlNavEnabled: true
+          });
+        });
+      })(jQuery);
+
+  body.main
+    .nav
+      .nav_inner.container
+        .logo
+          img.logo_img(src="images/logo.png", alt="coreSlider")
+        ul.menu
+          li.menu_item
+            a.menu_link(href="#how-to-use")
+              | How to Use
+          li.menu_item
+            a.menu_link(href="#options")
+              | Options
+          li.menu_item
+            a.menu_link(href="#examples")
+              | Examples
+          li.menu_item
+            a.menu_link(href="#download")
+              | Download
+          li.menu_item
+            a.menu_link(href="https://github.com/typical000/coreSlider", target="_blank")
+              i.icon.icon__fork
+              |  fork on 
+              i.icon.icon__github
+
+    .section.section__header
+      .section_inner
+      .core-slider.core-slider__fullwidth#headerSlider
+        .core-slider_viewport
+          .core-slider_list
+            .core-slider_item.demo.demo__bg-1
+            .core-slider_item.demo.demo__bg-2
+            .core-slider_item.demo.demo__bg-3
+        .core-slider_nav
+          .core-slider_arrow.core-slider_arrow__right
+          .core-slider_arrow.core-slider_arrow__left
+
+      .page-title
+        .container
+          .page-title_wrap
+            img.page-title_img(src="images/logo_big.png", alt="coreSlider")
+            h2.page-title_description
+              | jQuery BEM-style slider plugin
+
+    .section.section__white.section__how-to-use#how-to-use
+      .section_inner.container
+        h2.section_title How to Use
+        
+        h3.section_subtitle
+          span.section_subtitle-number 1.
+          | Setup
+        .section_description
+          p
+            | Add this tags to the 
+            code
+              ='<head>'
+            |  of your document (of before the 
+            code
+              ='</body>'
+            |  tag). This will link jQuery, slider CSS and JS into your web-page.
+          pre
+            | &lt;script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"&gt;&lt;/script&gt;
+            | &lt;script type="text/javascript" src="coreSlider.js"&gt;&lt;/script&gt;
+            | &lt;link rel="stylesheet" type="text/css" href="coreSlider.css"/&gt;
+
+        h3.section_subtitle
+          span.section_subtitle-number 2.
+          | Markup
+        .section_description
+          p
+            | Very good thins is that there is no restrictions to markup (So, all who loves BEM-style developing will like this :)). You can use any classes and nesting you need (because any tag can be configured on slider initialization) in difference of other plugins, where markup, or classname are hardcoded inside plugin. But there are few things that you must follow:
+          ul
+            li 
+              | Slider must have a 'viewport' (block, that will 'cut off' other slides that are outside of slider area of visibility). Default value is 
+              code .core-slider_viewport
+              |  ;
+            li 
+              | All slides must be wrapped with a container (in fact, this container will move on slide-change event, not each slide). For beautiful movement animation you can attach to this block some custom 
+              a(href="http://easings.net/", target="_blank") transition timing function
+              | . Default value is 
+              code .core-slider_list
+            li
+              | Slider must have containers for arrows and dots controls (you can disable this controls if you need). Default classes are:
+              code .core-slider_nav
+              |  and 
+              code .core-slider_control-nav
+          p
+            | As a canonical markup can be considered following HTML: 
+          pre
+            | &lt;div class="core-slider"&gt;
+            |   &lt;div class="core-slider_viewport"&gt;
+            |     &lt;div class="core-slider_list"&gt;
+            |       &lt;div class="core-slider_item"&gt;
+            |         Foo
+            |       &lt;/div&gt;
+            |       &lt;div class="core-slider_item"&gt;
+            |         Bar
+            |       &lt;/div&gt;
+            |     &lt;/div&gt;
+            |   &lt;/div&gt;
+            |   &lt;div class="core-slider_nav"&gt;
+            |     &lt;div class="core-slider_arrow core-slider_arrow__left"&gt;&lt;/div&gt;
+            |     &lt;div class="core-slider_arrow core-slider_arrow__right"&gt;&lt;/div&gt;
+            |   &lt;/div&gt;
+            |   &lt;div class="core-slider_control-nav"&gt;&lt;/div&gt;
+            | &lt;/div&gt;
+
+        h3.section_subtitle
+          span.section_subtitle-number 3.
+          | Initialize
+        .section_description
+          p
+            | In last step, add the folowing lines of JavaScript into the 
+            code
+              ='<head>'
+            |  of your document (of before the 
+            code
+              ='</body>'
+            |  tag).
+          pre
+            | &lt;script type="text/javascript" charset="utf-8"&gt;
+            |  $(window).load(function() {
+            |    $('.core-slider').coreSlider();
+            |  });
+            | &lt;/script&gt;
+          p
+            | The 
+            code $(window).load()
+            |  function is required to ensure the content of the page is loaded before the plugin initializes (because, sizes are calculated from slides content, and, if there is no images are loaded, content can be set as 0px width and height). Anyway, if you slider have strict sizes defined in CSS, you can change 
+            code $(window).load()
+            |  function to 
+            code $(document).ready()
+            |  function.
+
+        h3.section_subtitle
+          span.section_subtitle-number 4.
+          | Customize
+        .section_description
+          p
+            | For further customization see next section. Anyway, code of slider was made as flexible as possible. So, in my opinion, you can change anything you want.
+
+    .section.section__grey.section__options#options
+      .section_inner.container
+        h2.section_title Options
+        
+        p
+          | Listed below are all of the options available to customize slider to suite your needs.
+        pre
+          | interval: 5000,                                         // Interval of time between slide changes
+          | loop: true,                                             // When slider finish, should it loop again from first slide?
+          | slideshow: true,                                        // Enable/Disable automatic slideshow
+          | resize: true,                                           // Should be slider responsive on screen resize
+          | pauseOnHover: true,                                     // Pause the slideshow when hovering over slider
+          | startOnHover: false,                                    // Start the slideshow when hovering over slider
+          | sliderSelector: '.core-slider_list',                    // List selector (all items are inside this container)
+          | viewportSelector: '.core-slider_viewport',              // Viewport selector
+          | itemSelector: '.core-slider_item',                      // Slider items selector
+          | navEnabled: true,                                       // Enable/Disable navigation arrows
+          | navSelector: '.core-slider_nav',                        // Selector for navigation arrows container
+          | navItemNextSelector: '.core-slider_arrow__right',       // 'Next' arrow selector
+          | navItemPrevSelector: '.core-slider_arrow__left',        // 'Prev' arrow selector
+          | controlNavEnabled: false,                               // Enable/Disable control navigation (dots)
+          | controlNavSelector: '.core-slider_control-nav',         // Control navigation container selector (inside will be created dots items)
+          | controlNavItemSelector: 'core-slider_control-nav-item', // Single control nav dot (created dynamically. Write without dot. If you need more that one class - add them with space separator)
+          | loadedClass: 'is-loaded',                               // Classname, that will be added when slider is fully loaded
+          | clonedClass: 'is-cloned',                               // Classname, that will be added to cloned slides (see option 'clone')
+          | disabledClass: 'is-disabled',                           // Classname, that will be added it item is disabled (in most of cases - item will be display: noned)
+          | activeClass: 'is-active',                               // Classname, that will be added to active items (for example control navs, etc.)
+          | reloadGif: false,                                       // Reload gif's on slide change for replaying cycled animation inside current slide
+          | clone: false,                                           // Indicates, that at begin and at end of slider carousel items will be cloned to create 'infitite' carousel illusion
+          | items: 1,                                               // How mutch items will be placed inside viewport. Leave 1 if this is slider, 2 ot more - it will look like a carousel
+          | itemsPerSlide: 1,                                       // How many items must be slided by one action (NOTE: Must be less than 'items' option)
+          | cloneItems: 0                                           // How mutch items will be cloned at begin and at end of slider
+
+    .section.section__white.section__examples#examples
+      .section_inner.container
+        h2.section_title Examples
+
+        h3.section_subtitle
+          span.section_subtitle-number 1.
+          | Basic example (slider)
+        .section_description
+          .section_column.section_column__left
+            p
+              | This example illustrates basic usage of slider. Here we added some customization too (enavled 'dots' navigation, decreased interval, and enabled 'pausing' the slideshow on hover event)
+            pre
+              | $('#example').coreSlider({
+              |   pauseOnHover: false,
+              |   interval: 3000,
+              |   controlNavEnabled: true
+              | });
+
+          .section_column.section_column__right
+            .core-slider.example_1#example1
+              .core-slider_viewport
+                .core-slider_list
+                  .core-slider_item
+                    img(src="assets/mountain_1_sm.jpg", alt="")
+                  .core-slider_item
+                    img(src="assets/mountain_2_sm.jpg", alt="")
+                  .core-slider_item
+                    img(src="assets/mountain_3_sm.jpg", alt="")
+                  .core-slider_item
+                    img(src="assets/mountain_4_sm.jpg", alt="")
+              .core-slider_nav
+                .core-slider_arrow.core-slider_arrow__right
+                .core-slider_arrow.core-slider_arrow__left
+              .core-slider_control-nav
+
+        h3.section_subtitle
+          span.section_subtitle-number 2.
+          | Carousel
+        .section_description
+          .section_column.section_column__left
+            .core-slider.example_2#example2
+              .core-slider_viewport
+                .core-slider_list
+                  .core-slider_item
+                    img(src="assets/mountain_1_sm.jpg", alt="")
+                  .core-slider_item
+                    img(src="assets/mountain_2_sm.jpg", alt="")
+                  .core-slider_item
+                    img(src="assets/mountain_3_sm.jpg", alt="")
+                  .core-slider_item
+                    img(src="assets/mountain_4_sm.jpg", alt="")
+              .core-slider_nav
+                .core-slider_arrow.core-slider_arrow__right
+                .core-slider_arrow.core-slider_arrow__left
+              .core-slider_control-nav
+
+          .section_column.section_column__right
+            p
+              | In this example we switched our slider to carousel simply setting parameters 'items' not eqal to 1. In this case - slider items widths are recalculated to fit them in one screen.
+            pre
+              | $('#example').coreSlider({
+              |   items: 2
+              | });
+
+        h3.section_subtitle
+          span.section_subtitle-number 3.
+          | Carousel with cloned items
+        .section_description
+          .core-slider.core-slider__carousel.example_3#example3
+            .core-slider_viewport
+              .core-slider_list
+                .core-slider_item
+                  img(src="assets/mountain_1_sm.jpg", alt="")
+                .core-slider_item
+                  img(src="assets/mountain_2_sm.jpg", alt="")
+                .core-slider_item
+                  img(src="assets/mountain_3_sm.jpg", alt="")
+                .core-slider_item
+                  img(src="assets/mountain_4_sm.jpg", alt="")
+            .core-slider_nav
+              .core-slider_arrow.core-slider_arrow__right
+              .core-slider_arrow.core-slider_arrow__left
+            .core-slider_control-nav
+          p
+            | This example show how to make 'fake' and infinite carousel, that in reality is a slider.
+          pre
+            | $('#example').coreSlider({
+            |   clone: true,
+            |   cloneItems: 3
+            | });
+
+    .section.section__grey.section__browser-support
+      .section_inner.container
+        h2.section_title Browser Support
+
+        p All modern versions of Firefox, Chrome, Safari, iOS, Android, Internet Explorer and Edge have been tested and are supported. Also, due to usage of CSS3 animations, in IE9 slider looks like a piece of shit. But if you support these old browsers your soul will burn in hell :)
+
+    .section.section__white.section__download#download
+      .section_inner.container.container__centered
+        //- TODO: Add archive
+        a.btn.btn__download(href="https://github.com/typical000/coreSlider/archive/master.zip")
+          | Download
+        span.separator or
+        a.btn.btn__download(href="https://github.com/typical000/coreSlider")
+          i.icon.icon__fork
+          |  fork on 
+          i.icon.icon__github
+
+    .footer
+      | Created by
+      a.footer_link(href="https://github.com/typical000", target="_blank") Pavel Davydov
