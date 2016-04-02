@@ -367,6 +367,7 @@ code {
 // Core slider
 .core-slider {
   position: relative;
+  user-select: none;
   &_viewport {
     position: relative;
     overflow: hidden;
