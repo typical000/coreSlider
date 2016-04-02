@@ -1,0 +1,19 @@
+{
+    "name" : "coreslider",
+    "version" : "1.0.0",
+    "description" : "jQuery BEM-style slider plugin",
+    "main" : "coreSlider.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/typical000/coreSlider.git"
+    },
+    "author" : "Pavel Davydov",
+    "license" : "MIT",
+    "bugs" : {
+        "url" : "https://github.com/typical000/coreSlider/issues"
+    },
+    "homepage" : "https://github.com/typical000/coreSlider",
+    "dependencies" : {
+        "jquery": ">= 1.7"
+    }
+}
