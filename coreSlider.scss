@@ -1,0 +1,77 @@
+/*
+ * CoreSlider v1.0.0
+ * Copyright 2016 Pavel Davydov
+ * 
+ * Licensed under MIT (http://opensource.org/licenses/MIT)
+ */
+
+$coreSlider_transition-duration: .5s;
+$coreSlider_transition-type: cubic-bezier(.77, 0, .175, 1);
+$coreSlider_color: #fff;
+
+.core-slider {
+  position: relative;
+  user-select: none;
+  color: $coreSlider_color;
+  &_viewport {
+    overflow: hidden;
+    position: relative;
+  }
+  &_list {
+    transition: all $coreSlider_transition-duration $coreSlider_transition-type;
+  }
+  &_item {
+    float: left;
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  &_nav {
+    &.is-disabled {
+      display: none;
+    }
+  }
+  &_control-nav {
+    position: absolute;
+    z-index: 999;
+    right: 0;
+    bottom: 30px;
+    left: 0;
+    text-align: center;
+    // Control nav item
+    &-item {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin: 0 10px;
+      cursor: pointer;
+      transition: all .5s linear;
+      border-radius: 50%;
+      background: $coreSlider_color;
+      &:hover {
+        opacity: .3;
+      }
+      &.is-active {
+        cursor: default;
+        opacity: .3;
+      }
+    }
+  }
+  // Arrow
+  &_arrow {
+    position: absolute;
+    z-index: 999;
+    top: 50%;
+    cursor: pointer;
+    transform: translate(0, -50%);
+    &.is-disabled {
+      cursor: default;
+      opacity: .5;
+    }
+    &:hover {
+      opacity: .5;
+    }
+  }
+}
