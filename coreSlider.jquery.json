@@ -1,0 +1,27 @@
+{
+    "name" : "coreSlider",
+    "title" : "coreSlider",
+    "version" : "1.0.0",
+    "keywords" : [
+        "coreSlider",
+        "slider",
+        "responsive",
+        "BEM"
+    ],
+    "author" :  {
+        "name" : "Pavel Davydov",
+        "email" : "typical000@gmail.com"
+    },
+    "licenses" : [
+        {
+            "type" : "MIT",
+            "url" : "http://opensource.org/licenses/MIT"
+        }
+    ],
+    "bugs" : "https://github.com/typical000/coreSlider/issues",
+    "homepage" : "https://github.com/typical000/coreSlider",
+    "docs" : "https://github.com/typical000/coreSlider",
+    "dependencies" : {
+        "jquery": ">=1.7"
+    }
+}
