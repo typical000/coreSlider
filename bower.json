@@ -1,0 +1,30 @@
+{
+    "name" : "coreSlider",
+    "version" : "0.1.0",
+    "homepage" : "https://github.com/typical000/coreSlider",
+    "authors" :  [
+        "Pavel Davydov <typical000@gmail.com>"
+    ],
+    "description" : "Simple jQuery-based random slideshow plugin",
+    "main" : ["coreSlider.js"],
+    "ignore" : [
+        "**.*",
+        "node_modules",
+        "bower_components",
+        "app/bower_components",
+        "test",
+        "tests"
+    ],
+    "keywords" : [
+        "coreSlider",
+        "slider",
+        "responsive",
+        "BEM",
+        "jQuery slider"
+    ],
+    "author" :  {
+        "name" : "Pavel Davydov",
+        "email" : "typical000@gmail.com"
+    },
+    "license" : "MIT"
+}
