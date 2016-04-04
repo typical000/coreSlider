@@ -1,7 +1,7 @@
 /*
  * CoreSlider v1.0.0
  * Copyright 2016 Pavel Davydov
- * 
+ *
  * Licensed under MIT (http://opensource.org/licenses/MIT)
  */
 
@@ -191,6 +191,10 @@
 
       self.stop();
 
+      if(remainingItems.left === 0 && !self.settings.loop) {
+        $sliderPrevBtn.addClass(self.settings.disabledClass);
+      }
+
       // Play animation only if total number of items is less than number visible in viewport
       if (slideCountTotal > self.settings.items && isDirectionNavClick) {
         // Get number of remaining on right items
@@ -203,7 +207,7 @@
         // Get direction
         if (currentSlide - index < 0) {
           // Right direction
-          if (remainingItems.right < self.settings.itemsPerSlide) {
+          if (remainingItems.right <= self.settings.itemsPerSlide) {
             index = slideCount - self.settings.items + 1;
             // Set disabled class for nav
             if (!self.settings.loop) {
@@ -215,7 +219,7 @@
           }
         } else {
           // Left direction
-          if (remainingItems.left < self.settings.itemsPerSlide) {
+          if (remainingItems.left <= self.settings.itemsPerSlide) {
             index = 0;
             if (!self.settings.loop) {
               $sliderPrevBtn.addClass(self.settings.disabledClass);
