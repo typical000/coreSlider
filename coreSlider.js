@@ -134,6 +134,11 @@
             self.setSlide(currentSlide + self.settings.itemsPerSlide, true);
           }
         });
+        // If items are less then viewport - add disabled classes
+        if (slideCountTotal <= self.settings.items) {
+          $sliderNextBtn.addClass(self.settings.disabledClass);
+          $sliderPrevBtn.addClass(self.settings.disabledClass);
+        }
       } else {
         // Add disabled class for navigration arrows
         $sliderNav.addClass(self.settings.disabledClass);
@@ -158,11 +163,6 @@
         $sliderControlNav.on('click', $sliderControlNavItems, function(e) {
           self.setSlide($(e.target).index(), false);
         });
-        // If items are less then viewport - add disabled classes
-        if (slideCountTotal <= self.settings.items) {
-          $sliderNextBtn.addClass(self.settings.disabledClass);
-          $sliderPrevBtn.addClass(self.settings.disabledClass);
-        }
       } else {
         // Add disabled class for navigration dots
         $sliderControlNav.addClass(self.settings.disabledClass);
