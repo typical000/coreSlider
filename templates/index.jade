@@ -67,7 +67,7 @@ html
               | How to Use
           li.menu_item
             a.menu_link(href="#options")
-              | Options
+              | Options & API
           li.menu_item
             a.menu_link(href="#examples")
               | Examples
@@ -198,7 +198,7 @@ html
 
     .section.section__grey.section__options#options
       .section_inner.container
-        h2.section_title Options
+        h2.section_title Options & API
         
         p
           | Listed below are all of the options available to customize slider to suite your needs.
@@ -228,6 +228,20 @@ html
           | items: 1,                                               // How mutch items will be placed inside viewport. Leave 1 if this is slider, 2 ot more - it will look like a carousel
           | itemsPerSlide: 1,                                       // How many items must be slided by one action (NOTE: Must be less than 'items' option)
           | cloneItems: 0                                           // How mutch items will be cloned at begin and at end of slider
+          | 
+          | // Callbacks API
+          | before: function() {}, // Callback function - fires before each slider animation
+          | after: function() {},  // Callback function - fires after each slider animation
+          | init: function() {},   // Callback function - fires after slider was initialized
+        p
+          | You can also perform actions on coreSlider instances. E.g.:
+        pre
+          | $('#slider').coreslider('play');    // Play slideshow
+          | $('#slider').coreslider('stop');    // Stop slideshow
+          | $('#slider').coreslider('destroy'); // Destroy slideshow instance
+          | $('#slider').coreslider('next');    // Go to next slide
+          | $('#slider').coreslider('prev');    // Go to prev slide
+          | $('#slider').coreslider(3);         // Go to the third slide
 
     .section.section__white.section__examples#examples
       .section_inner.container
