@@ -1,17 +1,31 @@
 /*
- * CoreSlider v1.0.0
+ * CoreSlider v1.1.0
  * Copyright 2016 Pavel Davydov
- * 
+ *
  * Licensed under MIT (http://opensource.org/licenses/MIT)
  */
 
-(function($) {
+(function(factory) {
 
   'use strict';
 
-  $.coreSlider = function(container, options) {
+  if (typeof define === 'function' && define.amd) {
+    define(['jquery'], factory);
+  } else if (typeof exports !== 'undefined') {
+    module.exports = factory(require('jquery'));
+  } else {
+    factory(jQuery);
+  }
 
-    this.defaults = {
+}(function($) {
+
+  'use strict';
+
+  var CoreSlider = window.CoreSlider || {};
+
+  CoreSlider = function(container, options) {
+
+    var defaults = {
       interval: 5000,                                         // Interval of time between slide changes
       loop: true,                                             // When slider finish, should it loop again from first slide?
       slideshow: true,                                        // Enable/Disable automatic slideshow
@@ -36,11 +50,16 @@
       clone: false,                                           // Indicates, that at begin and at end of slider carousel items will be cloned to create 'infitite' carousel illusion
       items: 1,                                               // How mutch items will be placed inside viewport. Leave 1 if this is slider, 2 ot more - it will look like a carousel
       itemsPerSlide: 1,                                       // How many items must be slided by one action (NOTE: Must be less than 'items' option)
-      cloneItems: 0                                           // How mutch items will be cloned at begin and at end of slider
+      cloneItems: 0,                                          // How mutch items will be cloned at begin and at end of slider
+
+      // Callbacks API
+      before: function() {}, // Callback function - fires before each slider animation
+      after: function() {},  // Callback function - fires after each slider animation
+      init: function() {},   // Callback function - fires after slider was initialized
     };
 
     // Extend defaults with settings passed on init
-    this.settings = $.extend({}, this.defaults, options);
+    this.settings = $.extend({}, defaults, options);
 
     var self = this,
         animateInterval,
@@ -68,6 +87,9 @@
         }, // Number of items remaining on left and on right around visible part
         isFirstLoad = true; // Indicates, that slider was first loaded
 
+    // Store reference to the slider object
+    $.data(container, 'coreslider', this);
+
     // Getter for vendor prefixes
     function getVendorPrefixes(prefixes) {
       var tmp = document.createElement("div"),
@@ -87,15 +109,29 @@
       return 'translateX(' + offset + 'px)';
     }
 
+    // Function for setting sizes for each item in slider
+    function setSizes() {
+      slideWidth = $sliderViewport.width() / self.settings.items;
+      $sliderItems.add($clonedSliderItems).css('width', slideWidth);
+      $slider.css('width', slideWidth * (slideCount + self.settings.cloneItems*2 +  1));
+      // $slider.css('width', slideWidth * (slideCount + self.settings.items * 2 + 1) * 1.3);
+    }
+
     // Initialization of slider
     this.init = function() {
       // Set inner container sizes
       $sliderContainer.addClass(self.settings.loadedClass);
       if (self.settings.clone) {
         // If clone is enabled - clone slides on end and on begin of slider
-        self.cloneSlides();
+        // Prepend first last items at begin of slider and first elements on end of slider
+        $slider.append($sliderItems.slice(0, self.settings.cloneItems).clone().addClass(self.settings.clonedClass));
+        $slider.prepend($sliderItems.slice(slideCount - self.settings.cloneItems + 1, slideCount + 1).clone().addClass(self.settings.clonedClass));
+        // Cache cloned items in variable
+        $clonedSliderItems = $sliderContainer.find(self.settings.itemSelector).filter('.' + self.settings.clonedClass);
       }
-      self.setSizes();
+
+      setSizes();
+
       self.setSlide(currentSlide, false);
       if (self.settings.slideshow) {
         self.play();
@@ -134,6 +170,11 @@
             self.setSlide(currentSlide + self.settings.itemsPerSlide, true);
           }
         });
+        // If items are less then viewport - add disabled classes
+        if (slideCountTotal <= self.settings.items) {
+          $sliderNextBtn.addClass(self.settings.disabledClass);
+          $sliderPrevBtn.addClass(self.settings.disabledClass);
+        }
       } else {
         // Add disabled class for navigration arrows
         $sliderNav.addClass(self.settings.disabledClass);
@@ -158,38 +199,32 @@
         $sliderControlNav.on('click', $sliderControlNavItems, function(e) {
           self.setSlide($(e.target).index(), false);
         });
-        // If items are less then viewport - add disabled classes
-        if (slideCountTotal <= self.settings.items) {
-          $sliderNextBtn.addClass(self.settings.disabledClass);
-          $sliderPrevBtn.addClass(self.settings.disabledClass);
-        }
       } else {
         // Add disabled class for navigration dots
         $sliderControlNav.addClass(self.settings.disabledClass);
       }
-    };
 
-    this.cloneSlides = function() {
-      // Prepend first last items at begin of slider and first elements on end of slider
-      $slider.append($sliderItems.slice(0, self.settings.cloneItems).clone().addClass(self.settings.clonedClass));
-      $slider.prepend($sliderItems.slice(slideCount - self.settings.cloneItems + 1, slideCount + 1).clone().addClass(self.settings.clonedClass));
-      // Cache cloned items in variable
-      $clonedSliderItems = $sliderContainer.find(self.settings.itemSelector).filter('.' + self.settings.clonedClass);
-    };
+      // API: after callback
+      $slider.on('transitionend', function() {
+        self.settings.after(self);
+      });
 
-    // Function for setting sizes for each item in slider
-    this.setSizes = function() {
-      slideWidth = $sliderViewport.width() / self.settings.items;
-      $sliderItems.add($clonedSliderItems).css('width', slideWidth);
-      $slider.css('width', slideWidth * (slideCount + self.settings.cloneItems*2 +  1));
-      // $slider.css('width', slideWidth * (slideCount + self.settings.items * 2 + 1) * 1.3);
+      // API: Initialize callback
+      self.settings.init(self);
     };
 
     // Main function that moves slides. Set slide by passed index as parameter
     this.setSlide = function(index, isDirectionNav) {
       var isDirectionNavClick = isDirectionNav; // Indicates that click was from arrow navigation
 
+      // API: Before callback
+      self.settings.before(self);
+
       self.stop();
+
+      if(remainingItems.left === 0 && !self.settings.loop) {
+        $sliderPrevBtn.addClass(self.settings.disabledClass);
+      }
 
       // Play animation only if total number of items is less than number visible in viewport
       if (slideCountTotal > self.settings.items && isDirectionNavClick) {
@@ -203,7 +238,7 @@
         // Get direction
         if (currentSlide - index < 0) {
           // Right direction
-          if (remainingItems.right < self.settings.itemsPerSlide) {
+          if (remainingItems.right <= self.settings.itemsPerSlide) {
             index = slideCount - self.settings.items + 1;
             // Set disabled class for nav
             if (!self.settings.loop) {
@@ -215,7 +250,7 @@
           }
         } else {
           // Left direction
-          if (remainingItems.left < self.settings.itemsPerSlide) {
+          if (remainingItems.left <= self.settings.itemsPerSlide) {
             index = 0;
             if (!self.settings.loop) {
               $sliderPrevBtn.addClass(self.settings.disabledClass);
@@ -264,7 +299,7 @@
           resizeTimeout = null;
         }
         resizeTimeout = setTimeout(function() {
-          self.setSizes();
+          setSizes();
           self.setSlide(currentSlide, false);
         }, 250);
       });
@@ -286,6 +321,10 @@
       clearInterval(animateInterval);
     };
 
+    this.getCurrentSlideIndex = function() {
+      return currentSlide;
+    }
+
     // Finally init slider
     this.init();
   };
@@ -294,11 +333,26 @@
     if (options === undefined) {
       options = {};
     }
+
     if (typeof options === 'object') {
       return this.each(function() {
-        new $.coreSlider(this, options);
+        new CoreSlider(this, options);
       });
+    // Export public api
+    } else {
+      var $slider = $(this).data('coreslider');
+      switch(options) {
+        case "play": $slider.play(); break;
+        case "stop": $slider.stop(); break;
+        case "destroy": $slider.destroy(); break;
+        case "next": $slider.setSlide($slider.getCurrentSlideIndex() + 1, true); break;
+        case "prev": $slider.setSlide($slider.getCurrentSlideIndex() - 1, true); break;
+        default:
+          if (typeof options === "number") {
+            $slider.setSlide(options, true);
+          }
+      }
     }
   }
 
-})(jQuery);
+}));
