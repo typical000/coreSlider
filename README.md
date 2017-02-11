@@ -56,11 +56,11 @@ In last step, add the folowing lines of JavaScript into the `<head>` of your doc
 
 The `$(window).load()` function is required to ensure the content of the page is loaded before the plugin initializes (because, sizes are calculated from slides content, and, if there is no images are loaded, content can be set as 0px width and height). Anyway, if you slider have strict sizes defined in CSS, you can change `$(window).load()` function to `$(document).ready()` function.
 
-Options
+Options & API
 -------
 Listed below are all of the options available to customize slider to suite your needs.
 
-```html
+```js
 interval: 5000,                                         // Interval of time between slide changes
 loop: true,                                             // When slider finish, should it loop again from first slide?
 slideshow: true,                                        // Enable/Disable automatic slideshow
@@ -86,7 +86,22 @@ clone: false,                                           // Indicates, that at be
 items: 1,                                               // How mutch items will be placed inside viewport. Leave 1 if this is slider, 2 ot more - it will look like a carousel
 itemsPerSlide: 1,                                       // How many items must be slided by one action (NOTE: Must be less than 'items' option)
 cloneItems: 0                                           // How mutch items will be cloned at begin and at end of slider
+
+// Callbacks API
+before: function() {}, // Callback function - fires before each slider animation
+after: function() {},  // Callback function - fires after each slider animation
+init: function() {},   // Callback function - fires after slider was initialized
 ```
+You can also perform actions on coreSlider instances. E.g.:
+```js
+$('#slider').coreslider('play');    // Play slideshow
+$('#slider').coreslider('stop');    // Stop slideshow
+$('#slider').coreslider('destroy'); // Destroy slideshow instance
+$('#slider').coreslider('next');    // Go to next slide
+$('#slider').coreslider('prev');    // Go to prev slide
+$('#slider').coreslider(3);         // Go to the third slide
+```
+
 
 Browser Support
 ---------------
