@@ -94,6 +94,7 @@ init: function() {},   // Callback function - fires after slider was initialized
 ```
 You can also perform actions on coreSlider instances. E.g.:
 ```js
+$('#slider').coreslider('update');  // Update slideshow (useful when you remove/add slides)
 $('#slider').coreslider('play');    // Play slideshow
 $('#slider').coreslider('stop');    // Stop slideshow
 $('#slider').coreslider('destroy'); // Destroy slideshow instance

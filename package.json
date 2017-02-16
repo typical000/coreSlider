@@ -1,6 +1,6 @@
 {
     "name" : "coreslider",
-    "version" : "1.1.0",
+    "version" : "1.2.0",
     "description" : "jQuery BEM-style slider plugin",
     "main" : "coreSlider.js",
     "repository": {

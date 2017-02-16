@@ -78,6 +78,7 @@
         slideWidth, // Single slide width
         currentSlide = 0,
         transformPrefix = getVendorPrefixes(["transform", "msTransform", "MozTransform", "WebkitTransform"]),
+        transitionPrefix = getVendorPrefixes(["transition", "msTransition", "MozTransition", "WebkitTransition"]),
         resizeTimeout,
         currentUrl = null,
         currentTags = null,
@@ -85,7 +86,8 @@
           left: 0,
           right: 0
         }, // Number of items remaining on left and on right around visible part
-        isFirstLoad = true; // Indicates, that slider was first loaded
+        isFirstLoad = true, // Indicates, that slider was first loaded
+        cssTransform = {};
 
     // Store reference to the slider object
     $.data(container, 'coreslider', this);
@@ -114,7 +116,6 @@
       slideWidth = $sliderViewport.width() / self.settings.items;
       $sliderItems.add($clonedSliderItems).css('width', slideWidth);
       $slider.css('width', slideWidth * (slideCount + self.settings.cloneItems*2 +  1));
-      // $slider.css('width', slideWidth * (slideCount + self.settings.items * 2 + 1) * 1.3);
     }
 
     // Initialization of slider
@@ -132,7 +133,7 @@
 
       setSizes();
 
-      self.setSlide(currentSlide, false);
+      self.setSlide(currentSlide, true, false);
       if (self.settings.slideshow) {
         self.play();
       }
@@ -162,12 +163,12 @@
       if (self.settings.navEnabled) {
         $sliderPrevBtn.on('click', function() {
           if(!$(this).hasClass(self.settings.disabledClass)) {
-            self.setSlide(currentSlide - self.settings.itemsPerSlide, true);
+            self.setSlide(currentSlide - self.settings.itemsPerSlide, true, true);
           }
         });
         $sliderNextBtn.on('click', function() {
           if(!$(this).hasClass(self.settings.disabledClass)) {
-            self.setSlide(currentSlide + self.settings.itemsPerSlide, true);
+            self.setSlide(currentSlide + self.settings.itemsPerSlide, true, true);
           }
         });
         // If items are less then viewport - add disabled classes
@@ -182,22 +183,10 @@
 
       // Add handlers and init slider control navs
       if (self.settings.controlNavEnabled) {
-        // Create dynamically dot items and append them to container
-        var buffer = []; // Container of all dot items that will be created later
-        for (var i = 0; i < slideCount + 1; i++) {
-          if (i == currentSlide) {
-            // Make current item active from begin
-            buffer.push('<div class="' + self.settings.controlNavItemSelector + ' ' + self.settings.activeClass + '"></div>');
-          } else {
-            buffer.push('<div class="' + self.settings.controlNavItemSelector + '"></div>');
-          }
-        }
-        $sliderControlNav.append(buffer.join(''));
-        // Cache all items in variable
-        $sliderControlNavItems = $sliderControlNav.children();
-        // Add event handlers to container
+        self.setControlNav();
+
         $sliderControlNav.on('click', $sliderControlNavItems, function(e) {
-          self.setSlide($(e.target).index(), false);
+          self.setSlide($(e.target).index(), true, false);
         });
       } else {
         // Add disabled class for navigration dots
@@ -213,21 +202,68 @@
       self.settings.init(self);
     };
 
-    // Main function that moves slides. Set slide by passed index as parameter
-    this.setSlide = function(index, isDirectionNav) {
-      var isDirectionNavClick = isDirectionNav; // Indicates that click was from arrow navigation
+    // Create dynamically dot items and append them to container
+    this.setControlNav = function() {
+      var buffer = []; // Container of all dot items that will be created later
 
+      for (var i = 0; i < slideCount + 1; i++) {
+        if (i === currentSlide) {
+          // Make current item active from begin
+          buffer.push('<div class="' + self.settings.controlNavItemSelector + ' ' + self.settings.activeClass + '"></div>');
+        } else {
+          buffer.push('<div class="' + self.settings.controlNavItemSelector + '"></div>');
+        }
+      }
+
+      $sliderControlNav.empty().append(buffer.join(''));
+      $sliderControlNavItems = $sliderControlNav.children();
+    };
+
+    // Recalculate all sizes, set needed things
+    this.update = function() {
+      $sliderItems = $sliderContainer.find(self.settings.itemSelector);
+      slideCount = $sliderItems.length - 1;
+      slideCountTotal = $sliderItems.length;
+
+      setSizes();
+
+      if (currentSlide > slideCount) {
+        currentSlide = slideCount;
+        remainingItems.left--;
+      } else {
+        remainingItems.right--;
+      }
+
+      self.setSlide(currentSlide, false, false);
+
+      if (self.settings.controlNavEnabled) {
+        self.setControlNav();
+      }
+    };
+
+    // Main function that moves slides. Set slide by passed index as parameter
+    this.setSlide = function(index, isAnimated, isDirectionNav) {
       // API: Before callback
       self.settings.before(self);
 
       self.stop();
 
-      if(remainingItems.left === 0 && !self.settings.loop) {
+      if (this.settings.loop && (slideCount + 1) === self.settings.items) {
+        $sliderNextBtn.addClass(self.settings.disabledClass);
+        $sliderPrevBtn.addClass(self.settings.disabledClass);
+      }
+      if ((slideCount + 1) < self.settings.items) {
+        $sliderNextBtn.addClass(self.settings.disabledClass);
+        $sliderPrevBtn.addClass(self.settings.disabledClass);
+        return;
+      }
+
+      if (remainingItems.left === 0 && !self.settings.loop && isAnimated) {
         $sliderPrevBtn.addClass(self.settings.disabledClass);
       }
 
       // Play animation only if total number of items is less than number visible in viewport
-      if (slideCountTotal > self.settings.items && isDirectionNavClick) {
+      if (slideCountTotal > self.settings.items && isDirectionNav) {
         // Get number of remaining on right items
         remainingItems.right = (slideCount + 1) - currentSlide - self.settings.items;
         remainingItems.left = currentSlide;
@@ -273,7 +309,7 @@
         }
       }
 
-      if(!isDirectionNavClick && self.settings.controlNavEnabled) {
+      if(!isDirectionNav && self.settings.controlNavEnabled) {
         // Set slide directly (for example from dots or from extenal API), including items cloning
         index = (index > slideCount - self.settings.items + self.settings.cloneItems + 1) ? slideCount - self.settings.items + self.settings.cloneItems + 1 : index;
       }
@@ -285,9 +321,20 @@
       }
 
       // Apply CSS transition to block
-      $slider.css(transformPrefix, getTranslateX(-(index + self.settings.cloneItems) * slideWidth));
+      if (isAnimated) {
+        $slider.css(transformPrefix, getTranslateX(-(index + self.settings.cloneItems) * slideWidth));
+      } else {
+        cssTransform[transitionPrefix] = 'none';
+        cssTransform[transformPrefix] = getTranslateX(-(index + self.settings.cloneItems) * slideWidth);
+
+        $slider.css(cssTransform);
+        setTimeout(function() {
+          $slider.css(transitionPrefix, '');
+        }, 1);
+      }
 
       currentSlide = index;
+
       isFirstLoad = false; // Change loaded indicator
     };
 
@@ -300,7 +347,7 @@
         }
         resizeTimeout = setTimeout(function() {
           setSizes();
-          self.setSlide(currentSlide, false);
+          self.setSlide(currentSlide, true, false);
         }, 250);
       });
     };
@@ -312,7 +359,9 @@
 
     this.play = function() {
       animateInterval = setInterval(function() {
-        self.setSlide(currentSlide + self.settings.itemsPerSlide, true);
+        if ((slideCount + 1) !== self.settings.itemsPerSlide) {
+          self.setSlide(currentSlide + self.settings.itemsPerSlide, true, true);
+        }
         self.play();
       }, self.settings.interval);
     };
@@ -342,14 +391,15 @@
     } else {
       var $slider = $(this).data('coreslider');
       switch(options) {
-        case "play": $slider.play(); break;
-        case "stop": $slider.stop(); break;
-        case "destroy": $slider.destroy(); break;
-        case "next": $slider.setSlide($slider.getCurrentSlideIndex() + 1, true); break;
-        case "prev": $slider.setSlide($slider.getCurrentSlideIndex() - 1, true); break;
+        case 'update': $slider.update(); break;
+        case 'play': $slider.play(); break;
+        case 'stop': $slider.stop(); break;
+        case 'destroy': $slider.destroy(); break;
+        case 'next': $slider.setSlide($slider.getCurrentSlideIndex() + 1, true, true); break;
+        case 'prev': $slider.setSlide($slider.getCurrentSlideIndex() - 1, true, true); break;
         default:
           if (typeof options === "number") {
-            $slider.setSlide(options, true);
+            $slider.setSlide(options, true, true);
           }
       }
     }
