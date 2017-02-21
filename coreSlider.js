@@ -1,5 +1,5 @@
 /*
- * CoreSlider v1.1.0
+ * CoreSlider v1.2.1
  * Copyright 2016 Pavel Davydov
  *
  * Licensed under MIT (http://opensource.org/licenses/MIT)
@@ -71,6 +71,7 @@
         $sliderNav = $sliderContainer.find(self.settings.navSelector),
         $sliderPrevBtn = $sliderContainer.find(self.settings.navItemPrevSelector),
         $sliderNextBtn = $sliderContainer.find(self.settings.navItemNextSelector),
+        $sliderNavBtns = $sliderPrevBtn.add($sliderNextBtn),
         $sliderControlNav = $sliderContainer.find(self.settings.controlNavSelector),
         $sliderControlNavItems,
         slideCount = $sliderItems.length - 1, // Count, with counter, starting from zero
@@ -80,12 +81,6 @@
         transformPrefix = getVendorPrefixes(["transform", "msTransform", "MozTransform", "WebkitTransform"]),
         transitionPrefix = getVendorPrefixes(["transition", "msTransition", "MozTransition", "WebkitTransition"]),
         resizeTimeout,
-        currentUrl = null,
-        currentTags = null,
-        remainingItems = {
-          left: 0,
-          right: 0
-        }, // Number of items remaining on left and on right around visible part
         isFirstLoad = true, // Indicates, that slider was first loaded
         cssTransform = {};
 
@@ -171,10 +166,14 @@
             self.setSlide(currentSlide + self.settings.itemsPerSlide, true, true);
           }
         });
-        // If items are less then viewport - add disabled classes
-        if (slideCountTotal <= self.settings.items) {
-          $sliderNextBtn.addClass(self.settings.disabledClass);
-          $sliderPrevBtn.addClass(self.settings.disabledClass);
+
+        if (!self.settings.loop) {
+          if (currentSlide === 0) {
+            $sliderPrevBtn.addClass(self.settings.disabledClass);
+          }
+          if (currentSlide + self.settings.itemsPerSlide > slideCountTotal) {
+            $sliderNextBtn.addClass(self.settings.disabledClass);
+          }
         }
       } else {
         // Add disabled class for navigration arrows
@@ -227,11 +226,13 @@
 
       setSizes();
 
-      if (currentSlide > slideCount) {
-        currentSlide = slideCount;
-        remainingItems.left--;
-      } else {
-        remainingItems.right--;
+      // if (currentSlide > slideCount) {
+      if (currentSlide + self.settings.itemsPerSlide > slideCountTotal) {
+        currentSlide = slideCountTotal - self.settings.itemsPerSlide;
+      }
+
+      if (slideCountTotal < self.settings.items) {
+        currentSlide = 0;
       }
 
       self.setSlide(currentSlide, false, false);
@@ -248,70 +249,55 @@
 
       self.stop();
 
-      if (this.settings.loop && (slideCount + 1) === self.settings.items) {
-        $sliderNextBtn.addClass(self.settings.disabledClass);
-        $sliderPrevBtn.addClass(self.settings.disabledClass);
-      }
-      if ((slideCount + 1) < self.settings.items) {
-        $sliderNextBtn.addClass(self.settings.disabledClass);
-        $sliderPrevBtn.addClass(self.settings.disabledClass);
-        return;
-      }
+      if (!isFirstLoad) {
+        // If items are less then viewport - add disabled classes
+        if (slideCountTotal > self.settings.items) {
 
-      if (remainingItems.left === 0 && !self.settings.loop && isAnimated) {
-        $sliderPrevBtn.addClass(self.settings.disabledClass);
-      }
+          $sliderNavBtns.removeClass(self.settings.disabledClass);
 
-      // Play animation only if total number of items is less than number visible in viewport
-      if (slideCountTotal > self.settings.items && isDirectionNav) {
-        // Get number of remaining on right items
-        remainingItems.right = (slideCount + 1) - currentSlide - self.settings.items;
-        remainingItems.left = currentSlide;
+          if (currentSlide - index < 0) {
+            if (index === slideCountTotal && self.settings.loop) {
+              index = 0;
+            }
+            if (index + self.settings.itemsPerSlide > slideCountTotal) {
+              index = slideCountTotal - self.settings.items;
+              if (!self.settings.loop) {
+                $sliderNextBtn.addClass(self.settings.disabledClass);
+              }
+            }
 
-        $sliderNextBtn.removeClass(self.settings.disabledClass);
-        $sliderPrevBtn.removeClass(self.settings.disabledClass);
-
-        // Get direction
-        if (currentSlide - index < 0) {
-          // Right direction
-          if (remainingItems.right <= self.settings.itemsPerSlide) {
-            index = slideCount - self.settings.items + 1;
-            // Set disabled class for nav
-            if (!self.settings.loop) {
-              $sliderNextBtn.addClass(self.settings.disabledClass);
+          } else {
+            if (index + self.settings.itemsPerSlide === 0) {
+              index = slideCountTotal - self.settings.items;
+            }
+            if (index < 0) {
+              index = 0;
+              if (!self.settings.loop) {
+                $sliderPrevBtn.addClass(self.settings.disabledClass);
+              }
             }
           }
-          if (remainingItems.right == 0) {
-            index = 0; // If loop enavled - rollup to first slide
+
+          // Replay possible animations in gif's
+          if (self.settings.reloadGif) {
+            $sliderItems.eq(index).find('img').each(function() {
+              var $this = $(this);
+              var currentUrl = $this.attr('src');
+
+              $this.attr('src', '');
+              $this.attr('src', currentUrl);
+            });
           }
+
         } else {
-          // Left direction
-          if (remainingItems.left <= self.settings.itemsPerSlide) {
-            index = 0;
-            if (!self.settings.loop) {
-              $sliderPrevBtn.addClass(self.settings.disabledClass);
-            }
-          }
-          if (remainingItems.left == 0 && !isFirstLoad) {
-            index = slideCount - self.settings.items + 1;
-          }
+          $sliderNavBtns.addClass(self.settings.disabledClass);
         }
 
-        // Replay possible animations in gif's
-        if (self.settings.reloadGif) {
-          currentTags = $sliderItems.eq(index).find('img');
-          currentTags.each(function() {
-            var $this = $(this);
-            currentUrl = $this.attr('src');
-            $this.attr('src', '');
-            $this.attr('src', currentUrl);
-          });
+      } else {
+        // Disable contols if there are less items than viewport
+        if (slideCountTotal < self.settings.items) {
+          $sliderNavBtns.addClass(self.settings.disabledClass);
         }
-      }
-
-      if(!isDirectionNav && self.settings.controlNavEnabled) {
-        // Set slide directly (for example from dots or from extenal API), including items cloning
-        index = (index > slideCount - self.settings.items + self.settings.cloneItems + 1) ? slideCount - self.settings.items + self.settings.cloneItems + 1 : index;
       }
 
       // Set active new control nav item
@@ -335,7 +321,7 @@
 
       currentSlide = index;
 
-      isFirstLoad = false; // Change loaded indicator
+      isFirstLoad = false;
     };
 
     // Resize handler function
