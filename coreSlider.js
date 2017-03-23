@@ -1,5 +1,5 @@
 /*
- * CoreSlider v1.2.1
+ * CoreSlider v1.2.2
  * Copyright 2016 Pavel Davydov
  *
  * Licensed under MIT (http://opensource.org/licenses/MIT)
@@ -44,6 +44,7 @@
       controlNavItemSelector: 'core-slider_control-nav-item', // Single control nav dot (created dynamically. Write without dot. If you need more that one class - add them with space separator)
       loadedClass: 'is-loaded',                               // Classname, that will be added when slider is fully loaded
       clonedClass: 'is-cloned',                               // Classname, that will be added to cloned slides (see option 'clone')
+      hiddenClass: 'is-hidden',                               // Classname, indicates hidden things
       disabledClass: 'is-disabled',                           // Classname, that will be added it item is disabled (in most of cases - item will be display: noned)
       activeClass: 'is-active',                               // Classname, that will be added to active items (for example control navs, etc.)
       reloadGif: false,                                       // Reload gif's on slide change for replaying cycled animation inside current slide
@@ -177,7 +178,7 @@
         }
       } else {
         // Add disabled class for navigration arrows
-        $sliderNav.addClass(self.settings.disabledClass);
+        $sliderNav.addClass(self.settings.hiddenClass);
       }
 
       // Add handlers and init slider control navs
@@ -189,7 +190,7 @@
         });
       } else {
         // Add disabled class for navigration dots
-        $sliderControlNav.addClass(self.settings.disabledClass);
+        $sliderControlNav.addClass(self.settings.hiddenClass);
       }
 
       // API: after callback

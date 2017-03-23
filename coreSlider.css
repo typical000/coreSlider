@@ -34,7 +34,7 @@
   height: auto;
 }
 
-.core-slider_nav.is-disabled {
+.core-slider_nav.is-hidden {
   display: none;
 }
 
@@ -81,6 +81,10 @@
 .core-slider_arrow.is-disabled {
   cursor: default;
   opacity: .5;
+}
+
+.core-slider_arrow.is-hidden {
+  display: none;
 }
 
 .core-slider_arrow:hover {
