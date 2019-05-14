@@ -377,6 +377,10 @@
     // Export public api
     } else {
       var $slider = $(this).data('coreslider');
+      if(!$slider) {
+        return;
+      }
+
       switch(options) {
         case 'update': $slider.update(); break;
         case 'play': $slider.play(); break;
