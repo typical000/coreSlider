@@ -160,13 +160,13 @@
         $sliderPrevBtn.on('click', function() {
           if(!$(this).hasClass(self.settings.disabledClass)) {
             self.setSlide(currentSlide - self.settings.itemsPerSlide, true, true);
-            $sliderNavBtns.prop('disabled', true);
+            $sliderNavBtns.addClass(self.settings.disabledClass);
           }
         });
         $sliderNextBtn.on('click', function() {
           if(!$(this).hasClass(self.settings.disabledClass)) {
             self.setSlide(currentSlide + self.settings.itemsPerSlide, true, true);
-            $sliderNavBtns.prop('disabled', true);
+            $sliderNavBtns.addClass(self.settings.disabledClass);
           }
         });
 
@@ -197,7 +197,16 @@
 
       // API: after callback
       $slider.on('transitionend', function() {
-        $sliderNavBtns.prop('disabled', false);
+        $sliderNavBtns.removeClass(self.settings.disabledClass);
+        if (!self.settings.loop) {
+          if (currentSlide === 0) {
+            $sliderPrevBtn.addClass(self.settings.disabledClass);
+          }
+          if (currentSlide + self.settings.itemsPerSlide === slideCountTotal) {
+            $sliderNextBtn.addClass(self.settings.disabledClass);
+          }
+        }
+
         self.settings.after(self);
       });
 
