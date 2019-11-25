@@ -160,11 +160,13 @@
         $sliderPrevBtn.on('click', function() {
           if(!$(this).hasClass(self.settings.disabledClass)) {
             self.setSlide(currentSlide - self.settings.itemsPerSlide, true, true);
+            $sliderNavBtns.prop('disabled', true);
           }
         });
         $sliderNextBtn.on('click', function() {
           if(!$(this).hasClass(self.settings.disabledClass)) {
             self.setSlide(currentSlide + self.settings.itemsPerSlide, true, true);
+            $sliderNavBtns.prop('disabled', true);
           }
         });
 
@@ -195,6 +197,7 @@
 
       // API: after callback
       $slider.on('transitionend', function() {
+        $sliderNavBtns.prop('disabled', false);
         self.settings.after(self);
       });
 
