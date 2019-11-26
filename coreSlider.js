@@ -83,6 +83,7 @@
         transitionPrefix = getVendorPrefixes(["transition", "msTransition", "MozTransition", "WebkitTransition"]),
         resizeTimeout,
         isFirstLoad = true, // Indicates, that slider was first loaded
+        isAnimating = false, // Mark active slide animation
         cssTransform = {};
 
     // Store reference to the slider object
@@ -158,15 +159,17 @@
       // Add handlers for slider navs (prev/next)
       if (self.settings.navEnabled) {
         $sliderPrevBtn.on('click', function() {
+          if (isAnimating) return;
           if(!$(this).hasClass(self.settings.disabledClass)) {
             self.setSlide(currentSlide - self.settings.itemsPerSlide, true, true);
-            $sliderNavBtns.addClass(self.settings.disabledClass);
+            isAnimating = true;
           }
         });
         $sliderNextBtn.on('click', function() {
+          if (isAnimating) return;
           if(!$(this).hasClass(self.settings.disabledClass)) {
             self.setSlide(currentSlide + self.settings.itemsPerSlide, true, true);
-            $sliderNavBtns.addClass(self.settings.disabledClass);
+            isAnimating = true;
           }
         });
 
@@ -197,16 +200,7 @@
 
       // API: after callback
       $slider.on('transitionend', function() {
-        $sliderNavBtns.removeClass(self.settings.disabledClass);
-        if (!self.settings.loop) {
-          if (currentSlide === 0) {
-            $sliderPrevBtn.addClass(self.settings.disabledClass);
-          }
-          if (currentSlide + self.settings.itemsPerSlide === slideCountTotal) {
-            $sliderNextBtn.addClass(self.settings.disabledClass);
-          }
-        }
-
+        isAnimating = false;
         self.settings.after(self);
       });
 
