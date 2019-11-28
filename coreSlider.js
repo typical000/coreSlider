@@ -266,7 +266,7 @@
             if (index === slideCountTotal && self.settings.loop) {
               index = 0;
             }
-            if (index + self.settings.itemsPerSlide > slideCountTotal) {
+            if (index + self.settings.itemsPerSlide >= slideCountTotal) {
               index = slideCountTotal - self.settings.items;
               if (!self.settings.loop) {
                 $sliderNextBtn.addClass(self.settings.disabledClass);
