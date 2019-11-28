@@ -83,6 +83,7 @@
         transitionPrefix = getVendorPrefixes(["transition", "msTransition", "MozTransition", "WebkitTransition"]),
         resizeTimeout,
         isFirstLoad = true, // Indicates, that slider was first loaded
+        isAnimating = false, // Mark active slide animation
         cssTransform = {};
 
     // Store reference to the slider object
@@ -158,13 +159,17 @@
       // Add handlers for slider navs (prev/next)
       if (self.settings.navEnabled) {
         $sliderPrevBtn.on('click', function() {
+          if (isAnimating) return;
           if(!$(this).hasClass(self.settings.disabledClass)) {
             self.setSlide(currentSlide - self.settings.itemsPerSlide, true, true);
+            isAnimating = true;
           }
         });
         $sliderNextBtn.on('click', function() {
+          if (isAnimating) return;
           if(!$(this).hasClass(self.settings.disabledClass)) {
             self.setSlide(currentSlide + self.settings.itemsPerSlide, true, true);
+            isAnimating = true;
           }
         });
 
@@ -195,6 +200,7 @@
 
       // API: after callback
       $slider.on('transitionend', function() {
+        isAnimating = false;
         self.settings.after(self);
       });
 
